@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	Address          = "localhost:8500"                   // Consul 服务器地址
+	Address          = "0.0.0.0:8500"                     // Consul 服务器地址
 	Scheme           = "http"                             // Consul 服务器的 URI 方案 ("http" or "grpc")
 	TestEMail        = "test@test.com"                    // 测试用邮箱
 	TestPasswd       = "test-passwd"                      // 测试用密码
