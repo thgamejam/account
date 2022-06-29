@@ -35,7 +35,7 @@ bin/
 *.swp
 
 # proto 生成文件
-*.pd.go
+*.pb.go
 *.pb.validate.go
 *.swagger.json
 openapi.yaml
