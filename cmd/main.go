@@ -19,7 +19,7 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string
+	Name string = "thjam.account.service"
 	// Version is the version of the compiled software.
 	Version string
 	// flagConfigPath is the config flag.
@@ -31,8 +31,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&flagConfigPath, "conf", "../../configs", "config path, eg: -conf config.yaml")
-	flag.StringVar(&cloudConfigFile, "cloud_conf", "../../configs/cloud.yaml", "config path, eg: -cloud_conf cloud.yaml")
+	flag.StringVar(&flagConfigPath, "conf", "../configs", "config path, eg: -conf config.yaml")
+	flag.StringVar(&cloudConfigFile, "cloud_conf", "../configs/cloud.yaml", "config path, eg: -cloud_conf cloud.yaml")
 }
 
 func newApp(logger log.Logger, rr registry.Registrar, hs *http.Server, gs *grpc.Server) *kratos.App {
