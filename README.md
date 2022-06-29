@@ -1,5 +1,6 @@
 # 项目结构
 
+
 ```
 .
 ├── proto
@@ -24,6 +25,10 @@
 ```
 # 初始化项目并下载和更新依赖项
 make init
+# 运行
+make run
+# 构建
+make build
 # 依赖注入
 make wire
 # 生成错误文件代码
@@ -32,13 +37,14 @@ make error
 make config
 # 生成api文件代码
 make api
-# 构建
-make build
 # 生成所有代码
 make all
+# 移除所有生成代码
+make remove
 # 显示帮助
 make help
 ```
+
 
 ## Docker
 ```bash

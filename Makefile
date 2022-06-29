@@ -1,14 +1,22 @@
-GOPATH:=$(shell go env GOPATH)
-VERSION=$(shell git describe --tags --always)
-INTERNAL_PROTO_DIR="./"
-API_PROTO_DIR="./proto/api"
-PKG_CONF_DIR="./proto/conf"
-THIRD_PARTY_PROTO_DIR="./proto/third_party"
-INTERNAL_PROTO_FILES=$(shell find $(INTERNAL_PROTO_DIR) -name "*.proto")
-API_PROTO_FILES=$(shell find $(API_PROTO_DIR) -name "*.proto" -type f ! -name "error_reason.proto")
-ERROR_PROTO_FILES=$(shell find $(API_PROTO_DIR) -name "error_reason.proto")
+SHELL := /bin/bash
+PWD = "."
 
-WIRE_FILES=$(shell find $(INTERNAL_PROTO_DIR) -name "wire.go")
+GOPATH = $(shell go env GOPATH)
+VERSION = $(shell git describe --tags --always)
+
+GENERATE_FILES = $(shell find $(PWD) -name "*.pb.go")
+GENERATE_FILES += $(shell find $(PWD) -name "*.pb.validate.go")
+GENERATE_FILES += $(shell find $(PWD) -name "*.swagger.json")
+
+CONF_PROTO_DIR = "$(PWD)/internal/conf"
+API_PROTO_DIR = "$(PWD)/proto/api"
+PKG_CONF_DIR = "$(PWD)/proto/conf"
+THIRD_PARTY_PROTO_DIR = "$(PWD)/proto/third_party"
+
+CONF_PROTO_FILES = $(shell find $(CONF_PROTO_DIR) -name "*.proto")
+API_PROTO_FILES = $(shell find $(API_PROTO_DIR) -name "*.proto" -type f ! -name "error_reason.proto")
+ERROR_PROTO_FILES = $(shell find $(API_PROTO_DIR) -name "error_reason.proto")
+WIRE_FILES = $(shell find $(PWD) -name "wire.go")
 
 .PHONY: init
 # 初始化项目并下载和更新依赖项
@@ -24,14 +32,20 @@ init:
 	go install github.com/google/wire/cmd/wire@latest
 	go install github.com/envoyproxy/protoc-gen-validate@latest
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-	go mod tidy
+	go mod tidy -compat=1.17
+
+.PHONY: dev
+# 运行测试环境
+dev:
+	@echo '运行测试环境...'
+	@cd dev && bash dev-environment.sh
 
 .PHONY: wire
 # 依赖注入
 wire:
 	@echo '依赖注入...'
 	@for file in $(WIRE_FILES) ; do \
-		path=$$( dirname $$file ) ; \
+		path=`dirname $$file` ; \
 		wire $$path ; \
 	done
 
@@ -49,7 +63,7 @@ error:
 # 生成配置文件代码
 config:
 	@echo '生成配置文件代码...'
-	@for file in $(INTERNAL_PROTO_FILES) ; do \
+	@for file in $(CONF_PROTO_FILES) ; do \
 		protoc --proto_path=. \
                 --proto_path=$(THIRD_PARTY_PROTO_DIR) \
                 --proto_path=$(PKG_CONF_DIR) \
@@ -75,7 +89,13 @@ api:
 .PHONY: build
 # 构建
 build:
-	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
+	@mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
+	@mv ./bin/cmd ./bin/server
+
+.PHONY: run
+# 运行
+run:
+	@mkdir -p bin/ && cd bin/ && go run -ldflags "-X main.Version=$(VERSION)" ./../...
 
 .PHONY: generate
 # 代码生成
@@ -91,6 +111,12 @@ all:
 	@make error;
 	@make config;
 	@make wire;
+
+.PHONY: remove
+# 移除所有生成代码
+remove:
+	@echo '移除所有生成代码...'
+	@rm $(GENERATE_FILES)
 
 # 显示帮助
 help:
