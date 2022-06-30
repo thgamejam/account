@@ -27,25 +27,34 @@
 
 
 ## Generate other auxiliary files by Makefile
-```
+```bash
 # 初始化项目并下载和更新依赖项
 make init
+
 # 运行
 make run
+
 # 构建
 make build
+
 # 依赖注入
 make wire
+
 # 生成错误文件代码
 make error
+
 # 生成配置文件代码
 make config
+
 # 生成api文件代码
 make api
+
 # 生成所有代码
 make all
+
 # 移除所有生成代码
 make remove
+
 # 显示帮助
 make help
 ```
@@ -53,10 +62,14 @@ make help
 
 ## Docker
 ```bash
-# build
+# 构建
 docker build -t <your-docker-image-name> .
 
-# run
+# 运行
 docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
+
+# docker-compose 运行
+cd dev
+docker-compose -f service-compose.yaml up -d
 ```
 

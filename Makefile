@@ -4,6 +4,8 @@ PWD = "."
 GOPATH = $(shell go env GOPATH)
 VERSION = $(shell git describe --tags --always)
 
+PROJECT_NAME = $(shell basename `pwd`)
+
 GENERATE_FILES = $(shell find $(PWD) -name "*.pb.go")
 GENERATE_FILES += $(shell find $(PWD) -name "*.pb.validate.go")
 GENERATE_FILES += $(shell find $(PWD) -name "*.swagger.json")
@@ -89,13 +91,21 @@ api:
 .PHONY: build
 # 构建
 build:
+	@echo '构建项目...'
 	@mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 	@mv ./bin/cmd ./bin/server
 
 .PHONY: run
 # 运行
 run:
+	@echo '运行项目...'
 	@mkdir -p bin/ && cd bin/ && go run -ldflags "-X main.Version=$(VERSION)" ./../...
+
+.PHONY: docker
+# 构建docker镜像
+docker:
+	@echo '构建docker镜像...'
+	@docker build -t $(PROJECT_NAME):$(VERSION) .
 
 .PHONY: generate
 # 代码生成

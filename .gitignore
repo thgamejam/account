@@ -43,3 +43,6 @@ openapi.yaml
 /proto/
 
 go.sum
+
+# docker date
+/dev/data/
