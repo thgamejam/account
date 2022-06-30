@@ -30,9 +30,9 @@ var (
 	id, _ = os.Hostname()
 )
 
-func init() {
-	flag.StringVar(&flagConfigPath, "conf", "../configs", "config path, eg: -conf config.yaml")
-	flag.StringVar(&cloudConfigFile, "cloud_conf", "../configs/cloud.yaml", "config path, eg: -cloud_conf cloud.yaml")
+func Init() {
+	flag.StringVar(&flagConfigPath, "conf", "../configs", "配置路径，例如：-conf config.yaml")
+	flag.StringVar(&cloudConfigFile, "cloud", "../configs/cloud.yaml", "配置&发现服务的配置路径，例如：-cloud cloud.yaml")
 }
 
 func newApp(logger log.Logger, rr registry.Registrar, hs *http.Server, gs *grpc.Server) *kratos.App {
@@ -51,6 +51,7 @@ func newApp(logger log.Logger, rr registry.Registrar, hs *http.Server, gs *grpc.
 }
 
 func main() {
+	Init()
 	flag.Parse()
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
