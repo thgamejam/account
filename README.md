@@ -1,23 +1,28 @@
-# 项目结构
+## 项目结构
 
 
 ```
 .
-├── proto
-│   ├── api  // API & Error Proto files & Generated codes
-│   │   ├── foo
-│   │   │   ├── job
-│   │   │   └── service
-│   │   └── bar
-│   │       └── interface
-│   └── conf  // Config Proto Proto files
-│       └── interface
-└── app  // kratos microservices projects
-    ├── foo
-    │   ├── job
-    │   └── service
-    └── bar
-        └── interface
+├── bin     // 项目生成的可运行文件
+├── cmd     // 项目启动的入口文件
+│   ├── main.go     // 程序入口
+│   ├── wire.go     // 使用wire来维护依赖注入
+│   └── wire_gen.go // 使用wire生成的go文件
+├── configs     // 可以本地使用的配置文件样例
+├── dev         // 测试环境
+│   ├── dev-compose.yaml    // 测试环境docker-compose文件
+│   └── dev-environment.sh  // 测试环境启动脚本
+├── interface   // 该服务所有不对外暴露的代码，通常的业务逻辑都在这下面
+│   ├── biz         // 业务逻辑的组装层
+│   ├── conf        // 内部使用config的结构定义以及根据结构定义所生成的go文件
+│   ├── data        // 业务数据访问
+│   ├── server      // http、grpc和mq实例的创建和配置
+│   └── service     // 实现了api定义的服务层
+├── proto   // 公用的proto文件，从proto子项目导入
+│   ├── api         // 微服务使用的proto文件以及根据它们所生成的go文件
+│   ├── third_party // api 依赖的第三方proto
+│   └── conf        // 通用config结构定义的Proto文件
+└── sql     // 数据库sql
 ```
 
 
